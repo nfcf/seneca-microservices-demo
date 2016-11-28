@@ -1,0 +1,144 @@
+﻿<md-content flex>
+    <md-card>
+        <div layout="row">
+            <md-card-title>
+                <md-card-title-text>
+                    <div layout="row" layout-align="start center" ng-show="vm.welcome.title">
+                        <span class="md-headline" ng-bind="vm.welcome.title"></span>
+                        <md-button class="md-icon-button" ng-click="vm.editUserSettings()">
+                            <md-tooltip>{{ 'EDIT_PROFILE' | translate }}</md-tooltip>
+                            <md-icon>mode_edit</md-icon>
+                        </md-button>
+                    </div>
+                    <div layout="row" layout-align="start center">
+                        <span class="md-title" ng-bind="vm.welcome.text"
+                              style="color: dimgray;"></span>
+                        <span layout-align="start start" style="padding-left: 10px">
+                            <md-icon ng-show="vm.welcome.mood && vm.welcome.mood == 'good'"
+                                     class="no-padding-top"
+                                     style="color: green;">mood</md-icon>
+                            <md-icon ng-show="vm.welcome.mood && vm.welcome.mood == 'bad'"
+                                     class="no-padding-top"
+                                     style="color: red;">mood_bad</md-icon>
+                        </span>
+                    </div>
+                </md-card-title-text>
+            </md-card-title>
+        </div>
+    </md-card>
+
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default"
+                    ng-hide="vm.options.rowSelection && vm.selectedRuns.length">
+            <div class="md-toolbar-tools">
+                <md-icon class="material-icons">search</md-icon>
+                <form name="vm.filterForm" layout="row">
+                    <mdp-date-picker name="startDate" mdp-open-on-click
+                                     mdp-placeholder="{{ 'FROM' | translate }}"
+                                     ng-model="vm.query.filter.startDate"
+                                     class="filter-datepicker" required>
+                        <div ng-messages="vm.filterForm.startDate.$error">
+                            <div ng-message="required" translate="ERROR_REQUIRED"></div>
+                            <div ng-message="format" translate="ERROR_INVALID_FORMAT"></div>
+                            <div ng-message="minDate" translate="ERROR_MIN_DATE"></div>
+                            <div ng-message="maxDate" translate="ERROR_MAX_DATE"></div>
+                        </div>
+                    </mdp-date-picker>
+                    <mdp-date-picker name="endDate" mdp-open-on-click
+                                     mdp-placeholder="{{ 'TO' | translate }}"
+                                     ng-model="vm.query.filter.endDate"
+                                     class="filter-datepicker" required>
+                        <div ng-messages="vm.filterForm.endDate.$error">
+                            <div ng-message="required" translate="ERROR_REQUIRED"></div>
+                            <div ng-message="format" translate="ERROR_INVALID_FORMAT"></div>
+                            <div ng-message="minDate" translate="ERROR_MIN_DATE"></div>
+                            <div ng-message="maxDate" translate="ERROR_MAX_DATE"></div>
+                        </div>
+                    </mdp-date-picker>
+
+                    <mdp-time-picker name="startTime" mdp-open-on-click
+                                     mdp-placeholder="{{ 'FROM' | translate }}"
+                                     ng-model="vm.query.filter.startTime"
+                                     mdp-auto-switch="true"
+                                     mdp-format="HH:mm"
+                                     class="filter-timepicker" required>
+                        <div ng-messages="vm.filterForm.startTime.$error">
+                            <div ng-message="required" translate="ERROR_REQUIRED"></div>
+                            <div ng-message="format" translate="ERROR_INVALID_FORMAT"></div>
+                        </div>
+                    </mdp-time-picker>
+                    <mdp-time-picker name="endTime" mdp-open-on-click
+                                     mdp-placeholder="{{ 'TO' | translate }}"
+                                     ng-model="vm.query.filter.endTime"
+                                     mdp-auto-switch="true"
+                                     mdp-format="HH:mm"
+                                     class="filter-timepicker" required>
+                        <div ng-messages="vm.filterForm.endTime.$error">
+                            <div ng-message="required" translate="ERROR_REQUIRED"></div>
+                            <div ng-message="format" translate="ERROR_INVALID_FORMAT"></div>
+                        </div>
+                    </mdp-time-picker>
+                </form>
+                <div flex></div>
+                <md-button class="md-icon-button" ng-click="vm.refresh()">
+                    <md-tooltip>{{ 'REFRESH' | translate }}</md-tooltip>
+                    <md-icon>refresh</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="vm.editItem($event, null)">
+                    <md-tooltip>{{ 'ADD_RUN' | translate }}</md-tooltip>
+                    <md-icon>add</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-toolbar class="md-table-toolbar alternate"
+                    ng-show="vm.options.rowSelection && vm.selectedRuns.length">
+            <div class="md-toolbar-tools">
+                <span>{{vm.selectedRuns.length}} <span translate="SELECTED_ITEMS"></span></span>
+                <div flex></div>
+                <md-button class="md-icon-button" aria-label="Delete"
+                           ng-click="vm.deleteItems()">
+                    <md-tooltip>{{ 'BUTTON_DELETE' | translate }}</md-tooltip>
+                    <md-icon ng-if="vm.selectedRuns.length == 1">delete</md-icon>
+                    <md-icon ng-if="vm.selectedRuns.length > 1">delete_sweep</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-table-container>
+            <table md-table md-row-select="vm.options.rowSelection"
+                   multiple="{{vm.options.multiSelect}}"
+                   ng-model="vm.selectedRuns"
+                   md-progress="vm.refreshPromise">
+                <thead md-head md-order="vm.query.order">
+                    <tr md-row>
+                        <th md-column md-order-by="createdBy" ng-if="vm.showUserColumn"><span translate="USER"></span></th>
+                        <th md-column md-order-by="description"><span translate="DESCRIPTION"></span></th>
+                        <th md-column md-order-by="distance_in_km" md-numeric><span translate="DISTANCE"></span></th>
+                        <th md-column md-order-by="eatenOn"><span translate="DATETIME"</th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row md-select="run"
+                        md-select-id="id"
+                        md-auto-select="vm.options.autoSelect"
+                        ng-repeat="run in vm.runs | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+                        <td md-cell ng-click="vm.editItem($event, run)" ng-if="vm.showUserColumn">{{meal.createdBy}}</td>
+                        <td md-cell ng-click="vm.editItem($event, run)">{{run.description}}</td>
+                        <td md-cell ng-click="vm.editItem($event, run)">{{run.distance_in_km}}</td>
+                        <td md-cell ng-click="vm.editItem($event, run)">{{run.eatenOn | date : 'yyyy-MM-dd HH:mm' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+
+        <md-table-pagination md-limit="vm.query.limit"
+                             md-limit-options="vm.options.limitSelect"
+                             md-page-select="vm.options.pageSelect"
+                             md-page="vm.query.page"
+                             md-total="{{vm.runs.length}}"
+                             md-boundary-links="vm.options.boundaryLinks"
+                             md-on-paginate></md-table-pagination>
+
+    </md-card>
+</md-content>

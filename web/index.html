@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <base href="/" />
+    <title>Running Log</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta charset="utf-8" />
+
+    <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900|RobotoDraft:400,100,300,500,700,900'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- styles:css -->
+    <link rel="stylesheet" href="/.build/css/styles.css">
+    <!-- endinject -->
+</head>
+<body layout="column">
+    <div>
+        <nav-bar></nav-bar>
+
+        <div class="page-container" ng-view>
+
+        </div>
+    </div>
+
+    <!-- vendors:js -->
+    <script src="/.build/vendors/vendors.js"></script>
+    <!-- endinject -->
+    <!-- app:js -->
+    <script src="/.build/spa/app.js"></script>
+    <!-- endinject -->
+</body>
+</html>

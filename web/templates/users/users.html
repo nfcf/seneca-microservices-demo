@@ -1,0 +1,75 @@
+﻿<md-content flex>
+
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default"
+                    ng-hide="vm.selectedUsers.length">
+            <div class="md-toolbar-tools">
+                <md-icon class="material-icons">search</md-icon>
+                <form name="vm.filterForm" flex>
+                    <input type="text" flex
+                           ng-model="vm.query.filter"
+                           ng-model-options="vm.filterOptions"
+                           placeholder="{{ 'SEARCH' | translate}}">
+                </form>
+                <md-button class="md-icon-button" ng-show="vm.query.filter" ng-click="vm.clearFilter()">
+                    <md-tooltip>{{ 'CLEAR' | translate }}</md-tooltip>
+                    <md-icon>close</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="vm.refresh()">
+                    <md-tooltip>{{ 'REFRESH' | translate }}</md-tooltip>
+                    <md-icon>refresh</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-toolbar class="md-table-toolbar alternate"
+                    ng-show="vm.options.rowSelection && vm.selectedUsers.length">
+            <div class="md-toolbar-tools">
+                <span>{{vm.selectedUsers.length}} <span translate="SELECTED_ITEMS"></span></span>
+                <div flex></div>
+                <md-button class="md-icon-button" aria-label="Delete"
+                           ng-click="vm.deleteItems()">
+                    <md-tooltip>{{ 'BUTTON_DELETE' | translate }}</md-tooltip>
+                    <md-icon ng-if="vm.selectedUsers.length == 1">delete</md-icon>
+                    <md-icon ng-if="vm.selectedUsers.length > 1">delete_sweep</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-table-container>
+            <table md-table md-row-select="vm.options.rowSelection"
+                   multiple="{{vm.options.multiSelect}}"
+                   ng-model="vm.selectedUsers"
+                   md-progress="vm.refreshPromise">
+                <thead md-head md-order="vm.query.order">
+                    <tr md-row>
+                        <th md-column md-order-by="email"><span translate="EMAIL"></span></th>
+                        <th md-column md-order-by="name"><span translate="NAME"></span></th>
+                        <th md-column md-order-by="roles[0]"><span translate="ROLE"></span></th>
+                        <th md-column md-order-by="target_weekly_distance"><span translate="TARGET_WEEKLY_DISTANCE"</th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row md-select="user"
+                        md-select-id="id"
+                        md-auto-select="vm.options.autoSelect"
+                        ng-repeat="user in vm.users | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+                        <td md-cell ng-click="vm.editItem($event, user)">{{user.email}}</td>
+                        <td md-cell ng-click="vm.editItem($event, user)">{{user.name}}</td>
+                        <td md-cell ng-click="vm.editItem($event, user)">{{user.roles[0]}}</td>
+                        <td md-cell ng-click="vm.editItem($event, user)">{{user.target_weekly_distance}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+
+        <md-table-pagination md-limit="vm.query.limit"
+                             md-limit-options="vm.options.limitSelect"
+                             md-page-select="vm.options.pageSelect"
+                             md-page="vm.query.page"
+                             md-total="{{vm.users.length}}"
+                             md-boundary-links="vm.options.boundaryLinks"
+                             md-on-paginate></md-table-pagination>
+
+    </md-card>
+</md-content>

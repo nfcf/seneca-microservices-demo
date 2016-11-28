@@ -1,0 +1,51 @@
+﻿{
+  "BY": "por",
+  "LOGIN": "LOGIN",
+  "REGISTER": "REGISTE-SE",
+  "EMAIL": "Email",
+  "PASSWORD": "Palavra-Chave",
+  "CONFIRM_PASSWORD": "Confirme a Palavra-Chave",
+  "GO": "Entrar",
+  "NEXT": "CONTINUAR",
+  "FORGOT_PASSWORD": "Esqueceu-se da Palavra-Chave?",
+
+  "WELCOME_USER": "Bem Vindo {{ user }}!",
+  "WELCOME_STATS": "Já correste {{ currentWeeklyDistance }}km do teu objectivo semanal de {{ targetWeeklyDistance }}km!",
+  "RUNS": "Corridas",
+  "USERS": "Utilizadores",
+  "USER": "Utilizador",
+  "LOGOUT": "Sair",
+  "SEARCH": "Pesquisar",
+  "REFRESH": "Actualizar",
+  "CLEAR": "Limpar",
+
+  "NAME": "Nome",
+  "ROLE": "Perfil",
+  "DESCRIPTION": "Descrição",
+  "DISTANCE": "Distância (km)",
+  "TARGET_WEEKLY_DISTANCE": "Objectivo Semanal (km)",
+  "DATETIME": "Data e Hora",
+  "DATE": "Data",
+  "TIME": "Hora",
+  "FROM": "De:",
+  "TO": "a:",
+
+  "SELECTED_ITEMS": "item(s) seleccionado(s)",
+  "ADD_RUN": "Adicionar Corrida",
+  "EDIT_RUN": "Editar Corrida",
+  "EDIT_USER": "Editar Utilizador",
+  "EDIT_PROFILE": "Editar Configurações",
+
+  "BUTTON_CANCEL": "Cancelar",
+  "BUTTON_SAVE": "Guardar",
+  "BUTTON_OK": "Ok",
+  "BUTTON_DELETE": "Eliminar",
+  
+  "CONFIRM": "Confirmar",
+  "ARE_YOU_SURE_DELETE": "Tem a certeza que deseja eliminar o(s) item(s) seleccionado(s)?",
+  
+  "ERROR_REQUIRED": "Obrigatório",
+  "ERROR_INVALID_FORMAT": "Formato Inválido",
+  "ERROR_MIN_DATE": "Data Mínima",
+  "ERROR_MAX_DATE": "Data Máxima"
+}

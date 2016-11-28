@@ -1,0 +1,53 @@
+﻿<div class="container">
+    <div class="card"></div>
+    <div class="card">
+        <h1 class="title" translate="LOGIN"></h1>
+        <form role="form" ng-submit="vm.login()">
+            <div class="alert alert-danger" ng-show="vm.loginError" ng-bind="vm.loginError" style="position: relative;"></div>
+
+            <div class="input-container">
+                <input type="email" id="email" required="required" ng-model="vm.email" />
+                <label for="email" translate="EMAIL"></label>
+                <div class="bar"></div>
+            </div>
+            <div class="input-container">
+                <input type="password" id="password" required="required" ng-model="vm.password" />
+                <label for="password" translate="PASSWORD"></label>
+                <div class="bar"></div>
+            </div>
+            <div class="button-container">
+                <button id="login" type="submit"><span translate="GO"></span></button>
+            </div>
+            <div class="footer"><a href="#" ng-click="vm.resetPassword()"><span translate="FORGOT_PASSWORD"></span></a></div>
+        </form>
+    </div>
+    <div class="card alt">
+        <div class="toggle"></div>
+        <h1 class="title">
+            <span translate="REGISTER"></span>
+            <div class="close"></div>
+        </h1>
+        <form role="form" ng-submit="vm.register()">
+            <div class="alert alert-danger" ng-show="vm.registerError" ng-bind="vm.registerError" style="position: relative;"></div>
+
+            <div class="input-container">
+                <input type="email" id="email" required="required" ng-model="vm.email" />
+                <label for="email" translate="EMAIL"></label>
+                <div class="bar"></div>
+            </div>
+            <div class="input-container">
+                <input type="password" id="password" required="required" ng-model="vm.password" />
+                <label for="password" translate="PASSWORD"></label>
+                <div class="bar"></div>
+            </div>
+            <div class="input-container">
+                <input type="password" id="confirmPassword" required="required" ng-model="vm.confirmPassword" />
+                <label for="confirmPassword" translate="CONFIRM_PASSWORD"></label>
+                <div class="bar"></div>
+            </div>
+            <div class="button-container">
+                <button id="register" type="submit"><span translate="NEXT"></span></button>
+            </div>
+        </form>
+    </div>
+</div>
