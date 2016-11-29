@@ -17,7 +17,7 @@
                 </md-input-container>
                 <md-input-container ng-if="!vm.editProfileMode">
                     <label for="role" translate="ROLE"></label>
-                    <md-select name="role" ng-model="vm.user.roles[0]" required>
+                    <md-select name="role" ng-model="vm.user.role" required>
                         <md-option ng-repeat="role in vm.roles" ng-value="role.value">
                             {{role.desc}}
                         </md-option>
@@ -25,7 +25,7 @@
                 </md-input-container>
                 <md-input-container flex>
                     <label for="distance" translate="TARGET_WEEKLY_DISTANCE"></label>
-                    <input name="distance" type="number" min="0" max="999" ng-model="vm.user.target_weekly_distance" required>
+                    <input name="distance" type="number" min="0" max="999" ng-model="vm.user.targetWeeklyDistance" required>
                 </md-input-container>
             </div>
         </form>

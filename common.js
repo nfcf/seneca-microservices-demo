@@ -1,5 +1,5 @@
 /* This file is PUBLIC DOMAIN. You are free to cut-and-paste to start your own projects, of any kind */
-"use strict";
+'use strict';
 
 // load system modules
 var util = require('util');
@@ -26,7 +26,6 @@ module.exports = function (options) {
   // express needs a scalable session store if you want to deploy to more than one machine
   // this is simple implementation using seneca entities
   function session_store(session) {
-
     function SessionStore() {
       var self = this;
 
@@ -35,15 +34,15 @@ module.exports = function (options) {
       var session_ent = seneca.make$('session');
 
       self.get = function(sid, cb) {
-        session_ent.load$(sid, function(err, sess){
+        session_ent.load$(sid, function(err, sess) {
           cb(err, sess && sess.data);
         });
       }
 
       self.set = function(sid, data, cb) {
-        session_ent.load$(sid,function(err, sess){
-          if(err) return cb(err);
-          sess = sess || session_ent.make$({id$:sid});
+        session_ent.load$(sid, function(err, sess) {
+          if (err) return cb(err);
+          sess = sess || session_ent.make$({id$: sid});
           sess.last = new Date().getTime();
           sess.data = data;
           sess.save$(cb);
@@ -51,7 +50,7 @@ module.exports = function (options) {
       }
 
       self.destroy = function(sid, cb) {
-        session_ent.remove$(sid,cb);
+        session_ent.remove$(sid, cb);
       }
     }
     util.inherits(SessionStore, session.Store);

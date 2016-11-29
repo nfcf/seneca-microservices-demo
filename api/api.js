@@ -1,5 +1,5 @@
 /* This file is PUBLIC DOMAIN. You are free to cut-and-paste to start your own projects, of any kind */
-"use strict";
+'use strict';
 
 // load system modules
 var util = require('util');
@@ -27,9 +27,6 @@ module.exports = function (options) {
     prefix: '/' + name
   }, options);
 
-  var runs_client;
-  var users_client;
-
   // this is the standard system entity for user, with
   // base:sys, name:user, see http://senecajs.org/data-entities.html
   var user_entity = seneca.make('sys', 'user');
@@ -37,7 +34,7 @@ module.exports = function (options) {
   // add your actions to seneca by providing an input pattern to match
   // the function definitions are below
   // it's convenient to list all the action patterns in once place
-  // this also serves to document them for maintenance coders 
+  // this also serves to document them for maintenance coders
   seneca.add({ role: name, cmd: 'whoami' }, whoami);
 
   seneca.add({ role: name, cmd: 'users_save' }, usersSave);
@@ -64,20 +61,21 @@ module.exports = function (options) {
   function init(args, done) {
     seneca.use('seneca-amqp-transport');
 
-    runs_client = seneca.client({
+    // Any message with the below "roles" will be sent to the
+    // corresponding amqp client
+    seneca.client({
       type: 'amqp',
       pin: { role: 'runs' },
       url: options.amqp_url
     });
 
-    users_client = seneca.client({
+    seneca.client({
       type: 'amqp',
       pin: [{ role: 'users' }, { role: 'user' }],
       url: options.amqp_url
     });
 
     done();
-
   }
 
 
@@ -104,9 +102,10 @@ module.exports = function (options) {
       args.entity.id = args.entity_id;
     }
 
-    users_client.act({
+    seneca.act({
       role: 'users',
       cmd: 'save',
+      user: args.user,
       entity: args.entity
     }, function (err, res) {
       if (err) done(err);
@@ -117,10 +116,16 @@ module.exports = function (options) {
   function usersList(args, done) {
     var seneca = this
 
-    users_client.act({
+    seneca.act({
       role: 'users',
       cmd: 'list',
-      query: args.query,
+      user: args.user,
+      query: {
+        filter: args.filter,
+        sort$: args.sort,
+        skip$: (args.page - 1) * args.limit,
+        limit$: args.limit
+      }
     }, function (err, res) {
       if (err) done(err);
       else done(null, res);
@@ -130,7 +135,7 @@ module.exports = function (options) {
   function usersRemove(args, done) {
     var seneca = this
 
-    runs_client.act({
+    seneca.act({
       role: 'users',
       cmd: 'remove',
       entity_id: args.entity_id
@@ -148,7 +153,7 @@ module.exports = function (options) {
       args.entity.id = args.entity_id;
     }
 
-    runs_client.act({
+    seneca.act({
       role: 'runs',
       cmd: 'save',
       entity: args.entity
@@ -161,7 +166,7 @@ module.exports = function (options) {
   function runsLoad(args, done) {
     var seneca = this
 
-    runs_client.act({
+    seneca.act({
       role: 'runs',
       cmd: 'load',
       entity_id: args.entity_id
@@ -174,13 +179,15 @@ module.exports = function (options) {
   function runsList(args, done) {
     var seneca = this
 
-    runs_client.act({
+    seneca.act({
       role: 'runs',
       cmd: 'list',
-      filter: args.filter,
-      order$: order,
-      limit$: limit,
-      page$: page,
+      query: {
+        filter: args.filter,
+        sort$: args.sort,
+        skip$: (args.page - 1) * args.limit,
+        limit$: args.limit
+      }
     }, function (err, res) {
       if (err) done(err);
       else done(null, res);
@@ -190,7 +197,7 @@ module.exports = function (options) {
   function runsRemove(args, done) {
     var seneca = this
 
-    runs_client.act({
+    seneca.act({
       role: 'runs',
       cmd: 'remove',
       entity_id: args.entity_id
@@ -203,7 +210,7 @@ module.exports = function (options) {
   function runsGetStats(args, done) {
     var seneca = this
 
-    runs_client.act({
+    seneca.act({
       role: 'runs',
       cmd: 'getstats',
     }, function (err, res) {
@@ -218,21 +225,21 @@ module.exports = function (options) {
   // As a convention, Seneca actions expect to get full model objects as arguments - this makes
   // your life much easier as you don't need to go find them in the database, cluttering up your
   // code with load$ calls
-  // However, sometimes you'll need to specify entities using their identifier string, because 
+  // However, sometimes you'll need to specify entities using their identifier string, because
   // that's all you have, so that's a catch 22, right?
   // The solution is to wrap the actions (so that they become priors) with lookup actions
   // It would be tedious to write this code all the time, so the builtin util plugin provides an
   // action that does it for you: cmd:ensure_entity
   seneca.act({
-    role: 'util',
+    role: 'basic',
     cmd: 'ensure_entity',
     // specify the action patterns you want to wrap using a 'pin', which is a template
     // action pattern. Use '*' to match any value.
     // in this case, actions like role:api, cmd:whoami will be wrapped
     pin: { role: name, cmd: '*' },
-    // look for these arguments, interpret them as entity identifiers, and load them using the given entity 
+    // look for these arguments, interpret them as entity identifiers, and load them using the given entity
     entmap: {
-      user: user_entity,
+      user: user_entity
     }
   })
 
@@ -243,6 +250,7 @@ module.exports = function (options) {
   // The parameters to this function are provided by the seneca.http utility - see below for more details
   function setContext(req, res, args, act, respond) {
     args.user = req.seneca.user;
+
     // call the business logic function
     act(args, respond);
   }
@@ -252,7 +260,7 @@ module.exports = function (options) {
   // optionally, provide a 'service' middleware function. You do this
   // by calling the role:web action with a use argument. The use
   // argument can be a plain middleware function, and you can do
-  // anything you like in it.  
+  // anything you like in it.
 
   // However, when there is a relatively direct mapping from your
   // business logic to your HTTP API (which often makes sense), then
@@ -264,7 +272,7 @@ module.exports = function (options) {
   // prefix: the shared URL prefix; you can use express route syntax
   //         i.e. :param to grad params from the URL pin: the actions that can
   //         be called - with URL format: /prefix/pin_name -
-  //         e.g. /api/v1/whoami 
+  //         e.g. /api/v1/whoami
   // startware, endware: functions as above
   // map: only those actions appearing in the map can actually be
   //      called, so use this to expose only the parts you want to each map
@@ -282,9 +290,9 @@ module.exports = function (options) {
       prefix: '/' + name + '/v1/',
       pin: { role: name, cmd: '*' },
       secure: {
-            fail: '/'
+        fail: ''
       },
-      //startware: startware,
+      // startware: startware,
       map: {
         whoami: {
           GET: setContext
@@ -323,13 +331,11 @@ module.exports = function (options) {
         runs_getstats: {
           alias: 'runs/getstats/',
           GET: setContext
-        },
-
-      },
-      //endware: endware,
+        }
+      }
+      // endware: endware
     }
   });
-
 
 
   // to finish the registration of a plugin, you need to return a meta data obect that

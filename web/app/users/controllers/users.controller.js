@@ -37,7 +37,7 @@
 
         vm.query = {
             filter: '',
-            order: { email: 1 },
+            sort: '-email',
             limit: 10,
             page: 1
         };

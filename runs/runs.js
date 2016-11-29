@@ -1,5 +1,5 @@
 /* This file is PUBLIC DOMAIN. You are free to cut-and-paste to start your own projects, of any kind */
-"use strict";
+'use strict';
 
 // load system modules
 var util = require('util');

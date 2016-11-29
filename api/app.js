@@ -9,22 +9,22 @@
  * The --env command line argument can be used to start the app in a 
  * development mode for debugging:
  * $ node app.js --env=development
- * 
+ *
  * The NODE_ENV environment variable can also be used for this purpose
  * $ NODE_ENV=development node app.js
  */
 
 /* This file is PUBLIC DOMAIN. You are free to cut-and-paste to start your own projects, of any kind */
-"use strict";
+'use strict';
 
 
 // always capture, log and exit on uncaught exceptions
 // your production system should auto-restart the app
 // this is the Node.js way
 process.on('uncaughtException', function (err) {
-    console.error('uncaughtException:', err.message);
-    console.error(err.stack);
-    process.exit(1);
+  console.error('uncaughtException:', err.message);
+  console.error(err.stack);
+  process.exit(1);
 });
 
 
@@ -42,10 +42,10 @@ var env = argv.env || process.env['NODE_ENV'] || 'development';
 // note that module returns a function that constructs seneca instances (just like express)
 // so you if you call it right away (as here, with the final () ), you get a default instance
 var seneca = require('seneca')({
-    log: {
-      level: 'info+',
-      handler: 'print'
-    }
+  log: {
+    level: 'info+',
+    handler: 'print'
+  }
 });
 seneca.use('basic');
 seneca.use('web');
@@ -56,139 +56,142 @@ seneca.use('entity');
 // each seneca plugin can be given options when you register it ("seneca.use"),
 // so you don't have to do this, but it does make life easier
 // see the options.app.js file for more info
-var options_folder = 'production' == env ? '/home/deploy/' : './';
+var options_folder = 'production' === env ? '/home/deploy/' : './';
 var options_file = options_folder + 'options.app.js';
 try {
-    require('fs').statSync(options_file);
-} catch (e) {
-    process.exit(!console.error("Please copy options.example.js to " + options_file + ': ' + e))
+  require('fs').statSync(options_file);
+} 
+catch (e) {
+  process.exit(!console.error('Please copy options.example.js to ' + options_file + ': ' + e))
 }
 seneca.use('options', options_file);
 
 // if developing, use a throw-away in-process database
-if ('development' == env) {
-    // the builtin mem-store plugin provides the database
-    // also enable http://localhost:3333/mem-store/dump so you can debug db contents
-    seneca.use('mem-store', {
-        web: {
-            dump: true
-        }
-    });
+if ('development' === env) {
+  // the builtin mem-store plugin provides the database
+  // also enable http://localhost:3333/mem-store/dump so you can debug db contents
+  seneca.use('mem-store', {
+    web: {
+      dump: true
+    }
+  });
 }
 // if not developing, use a mongo database
 else {
-    // NOTE: no code changes are required!
-    // this is one of the benefits of the using the seneca data entity model
-    // for more, see http://senecajs.org/data-entities.html
-    seneca.use('mongo-store');
+  // NOTE: no code changes are required!
+  // this is one of the benefits of the using the seneca data entity model
+  // for more, see http://senecajs.org/data-entities.html
+  seneca.use('mongo-store');
 
-    // register the seneca-memcached plugin - this provides access to a cache layer backed by memcached
-    seneca.use('memcached-cache');
+  // register the seneca-memcached plugin - this provides access to a cache layer backed by memcached
+  seneca.use('memcached-cache');
 
-    // register the seneca-vcache plugin - this provides version-based caching for 
-    // data entities over multiple memcached servers, and caches by query in addition to id
-    seneca.use('vcache');
+  // register the seneca-vcache plugin - this provides version-based caching for
+  // data entities over multiple memcached servers, and caches by query in addition to id
+  seneca.use('vcache');
 }
 
 // register the seneca-auth plugin - this provides authentication business logic
 seneca.use('auth');
 seneca.use(require('auth-token-header'), {
-    tokenkey: 'Authorization'
-});
-
-// register the seneca-perm plugin - this provides permission checking
-// set the entity option to true, which means, "check all entities"
-seneca.use('perm', {
-    entity: true
+  tokenkey: 'Authorization'
 });
 
 // register the seneca-data-editor plugin - this provides a user interface for data admin
 // Open the /data-editor url path to edit data! (you must be an admin, or on localhost)
 seneca.use('data-editor', {
-    admin: {
-        local: true,
-    }
+  admin: {
+    local: true
+  }
 });
 
 // register the common plugin for some exports used accross the micro-services
 seneca.use(require('./../common.js'));
 
 seneca.ready(function (err) {
-    if (err) return process.exit(!console.error(err));
+  if (err) return process.exit(!console.error(err));
 
-    // seneca plugins can export objects for external use
-    // you can access these using the seneca.export method
-    
-    // get the configuration options
-    var options = seneca.export('options');
-    seneca.log.debug(options.main);
+  // seneca plugins can export objects for external use
+  // you can access these using the seneca.export method
 
-    // get the middleware function from the builtin web plugin
-    var web = seneca.export('web');
+  // get the configuration options
+  var options = seneca.export('options');
+  seneca.log.debug(options.main);
 
-    var http = require('http');
-    var express = require('express');
-    var session = require('express-session');
-    var path = require('path');
+  // get the middleware function from the builtin web plugin
+  var web = seneca.export('web');
 
-    // create an express app
-    var app = express();
+  var http = require('http');
+  var express = require('express');
+  var session = require('express-session');
+  var path = require('path');
 
-    // setup express
-    app.use(require('cookie-parser')());
-    app.use(require('body-parser').json());
+  // create an express app
+  var app = express();
 
-    // Log requests to console
-    app.use(function (req, res, next) {
-        console.log('EXPRESS', new Date().toISOString(), req.method, req.url);
-        next();
+  // setup express
+  app.use(require('cookie-parser')());
+  app.use(require('body-parser').json());
+
+  // Log requests to console
+  app.use(function (req, res, next) {
+    console.log('EXPRESS', new Date().toISOString(), req.method, req.url);
+    next();
+  });
+
+  // serve static files from a folder defined in your options file
+  app.use(express.static(path.join(__dirname, options.main.public)));
+
+  // you can't use a single node in-memory session store if you want to scale
+  // common.js defines a session store that uses seneca entities
+  var sessionStore = seneca.export('common/session-store');
+  app.use(session({
+    secret: 'seneca',
+    resave: true,
+    saveUninitialized: true,
+    store: sessionStore(session)
+  }));
+
+  // add in the seneca middleware
+  // this is how seneca integrates with express (or any connect-style web server module)
+  app.use(web);
+
+  var server = http.createServer(app);
+
+  seneca.use('admin', {
+    server: server,
+    local: true
+  });
+
+
+  // register the seneca-perm plugin - this provides permission checking
+  // set the entity option to true, which means, "check all entities"
+  seneca.use('perm', {
+    act: [{ role: 'api' }],
+    entity: true
+  });
+
+  // register your own plugin - the main app business logic!
+  // in the options, indicate if you're in development mode
+  // set the fake option, which triggers creation of test users and events if env == 'development'
+  seneca.use('api', {
+    dev_mode: 'development' === env
+  });
+
+  seneca.use('facebook-auth', options.facebook || {})
+  seneca.use('google-auth', options.google || {})
+
+
+  // should be sure that all plugins are fully loaded before starting server
+  seneca.ready(function () {
+    seneca.act({ init: 'perm' });
+
+    // default route for when the URL isn't known...
+    app.get('*', function (req, res) {
+      res.redirect('/');
     });
-    
-    // serve static files from a folder defined in your options file
-    app.use(express.static(path.join(__dirname, options.main.public)));
-    
-    // you can't use a single node in-memory session store if you want to scale
-    // common.js defines a session store that uses seneca entities
-    var sessionStore = seneca.export('common/session-store');
-    app.use(session({
-        secret: 'seneca',
-        resave: true,
-        saveUninitialized: true,
-        store: sessionStore(session)
-    }));
-
-    // add in the seneca middleware
-    // this is how seneca integrates with express (or any connect-style web server module)
-    app.use(web);
-
-    var server = http.createServer(app);
-
-    seneca.use('admin', {
-        server: server,
-        local: true
-    });
-
-
-    // register your own plugin - the main app business logic!
-    // in the options, indicate if you're in development mode
-    // set the fake option, which triggers creation of test users and events if env == 'development'
-    seneca.use('api', {
-        dev_mode: 'development' == env
-    });
-
-    seneca.use('facebook-auth', options.facebook || {})
-    seneca.use('google-auth', options.google || {})
-
-
-    // should be sure that all plugins are fully loaded before starting server
-    seneca.ready(function () {
-
-        // default route for when the URL isn't known... 
-        app.get('*', function(req, res){
-            res.redirect('/');
-        });
-        // start listening for HTTP requests
-        server.listen(options.main.port);
-        seneca.log.info('Listen on', options.main.port);
-    });
+    // start listening for HTTP requests
+    server.listen(options.main.port);
+    seneca.log.info('Listen on', options.main.port);
+  });
 });

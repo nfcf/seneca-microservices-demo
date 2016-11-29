@@ -1,7 +1,8 @@
-seneca-mvp
+SenecaJS MicroServices Demo Project
 ==========
 
-How to build a Minimim Viable Product with Seneca & Express
+How to build a Minimim Viable Product (Microservices architecture using Seneca, Express and AngularJS 1.5)
+Work In Progress...
 
 ## Setup
 

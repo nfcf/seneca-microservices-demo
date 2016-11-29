@@ -1,8 +1,5 @@
 /* This file is PUBLIC DOMAIN. You are free to cut-and-paste to start your own projects, of any kind */
-"use strict";
-
-// load system modules
-var util = require('util');
+'use strict';
 
 // load utility modules
 var _ = require('lodash'); // see http://npmjs.org/package/lodash
@@ -33,7 +30,7 @@ module.exports = function (options) {
   // add your actions to seneca by providing an input pattern to match
   // the function definitions are below
   // it's convenient to list all the action patterns in once place
-  // this also serves to document them for maintenance coders 
+  // this also serves to document them for maintenance coders
   seneca.add({role: name, cmd: 'save'}, save);
   seneca.add({role: name, cmd: 'load'}, load);
   seneca.add({role: name, cmd: 'list'}, list);
@@ -45,20 +42,16 @@ module.exports = function (options) {
   // this is a good place to put any initial data storage interactions
   // just make sure you've defined a data store already
   seneca.add({init: name}, init);
-  
-  if (options.dev_mode) { 
+
+  if (options.dev_mode) {
     seneca.add({ role: name, cmd: 'fake_users' }, fakeUsers)
   }
-
 
   // ACTION: initialize plugin
   // args: none
   //
   // result: no value
-  function init( args, done ) {
-
-    seneca.act({role: 'basic', cmd: 'define_sys_entity' }, {list:['-/sys/user']});
-
+  function init(args, done) {
     seneca.use('seneca-amqp-transport');
     seneca.listen({
       type: 'amqp',
@@ -69,7 +62,7 @@ module.exports = function (options) {
     // need to call these actions one after the other in series
     async.series([
       function (callback) {
-        seneca.act({role: 'basic', cmd: 'define_sys_entity' }, {list:['-/sys/user']}, function(err, res) {
+        seneca.act({ role: 'basic', cmd: 'define_sys_entity' }, { list: ['-/sys/user'] }, function(err, res) {
           callback(err);
         });
       },
@@ -103,78 +96,120 @@ module.exports = function (options) {
         seneca.use('seneca-amqp-transport');
         seneca.listen({
           type: 'amqp',
-          pin: {role: name},
+          pin: [{ role: name }, { role: 'user' }],
           url: options.amqp_url
         });
 
         callback();
-      },
+      }
 
     ], done);
   }
 
-  function save( args, done ) {
+  function save(args, done) {
     var seneca = this;
 
-      // create entity instances to interact with data storage
-    var entity  = user_entity.make$();
+    if ((args.entity.admin && !args.user.admin) ||
+        (args.entity.manager && !args.user.admin && !args.user.manager)) {
+      return done(null, {
+        http$: { status: 401 },
+        ok: false,
+        why: 'Can\'t elevate this user permissions.'
+      });
+    }
 
-    for(var k in args.entity) entity[k] = args.entity[k];
-    
-    entity.save$(function(err, res){
-      done(null,  res);
+    // create entity instances to interact with data storage
+    var entity = user_entity.make$();
+
+    for (var k in args.entity) entity[k] = args.entity[k];
+
+    setUserPermissions(args);
+
+    entity.save$(function (err, res) {
+      done(err, res);
     });
   }
 
-  function load( args, done ) {
+  function load(args, done) {
     var seneca = this;
 
-    var entity  = user_entity.make$();
+    var entity = user_entity.make$();
     entity.load$(args.entity_id, function (err, res) {
+      done(err, res);
+    });
+  }
+
+  function list(args, done) {
+    var seneca = this;
+    var filter;
+
+    if (args.query.filter) {
+      // TODO: Unfortunately seneca-memstore / query doesn't support regex.
+      // Therefore, I'm not filtering here and am only filtering after the
+      // results are returned...
+
+      // args.query.name = new RegExp(args.query.filter);
+      filter = args.query.filter;
+    }
+
+    // delete args.query.filter;
+    // args.query.active = true;
+
+    var entity = user_entity.make$();
+    entity.list$(/* args.query, */function (err, res) {
+      if (err) done(err);
+
+      res = _.filter(res, function (ent) {
+        return ent.active &&
+               !!ent.email &&
+               (!filter ||
+               (ent.email.indexOf(filter) >= 0 ||
+               (!!ent.name && ent.name.indexOf(filter) >= 0)));
+      });
+
       done(null, res);
     });
   }
 
-  function list( args, done ) {
+  function remove(args, done) {
     var seneca = this;
 
-    args.filter = args.filter || { };
-    args.query = args.filter || { };
-    args.query.active = true;
-    args.query.order$ = args.order;
-    args.query.limit$ = args.limit;
-    args.query.page$ = args.page;
-
-    var entity  = user_entity.make$();
-    entity.list$(args.query, function (err, res) {
-      done(null, res);
-    });
-  }
-
-  function remove( args, done ) {
-    var seneca = this;
-
-    var entity  = user_entity.make$();
+    var entity = user_entity.make$();
     entity.load$(args.entity_id, function (err, res) {
+      if (!err) done(err);
+
       res.active = false;
       res.save$(function (err, res) {
-        done(null, res);
+        done(err, res);
       });
     });
   }
 
-  function register( args, done ) {
+  function register (args, done) {
     var seneca = this;
 
     args.admin = args.admin || false;
-    args.target_weekly_distance = 20;
+    args.manager = false;
+    args.targetWeeklyDistance = 20;
 
+    setUserPermissions(args);
     // this calls the original action, as provided by the user plugin
     seneca.prior(args, done);
   }
 
+  function setUserPermissions(user) {
+    user.perm = {
+      entity: [
+        { base: 'sys', name: 'user', perm$: '' }
+      ],
+      act: [
+        { role: name, perm$: user.admin || user.manager }
+      ]
+    };
+  }
 
-    // ACTION: create some fake users, for testing
+
+  // ACTION: create some fake users, for testing
   // args:
   //   users:  number to create
   //   {nick,name,pass}prefix: custom prefixes for generated values
@@ -186,14 +221,13 @@ module.exports = function (options) {
     if (!users) return done();
     if (0 === users.count) return done();
 
-    var count = users.count || 8;
+    var count = users.count || 4;
     var nickprefix = users.nickprefix || 'u'
     var nameprefix = users.nameprefix || 'n'
     var passprefix = users.passprefix || 'p'
 
     // we can use for loop here, as it does not matter if we hit the in-memory database hard
     for (var i = 0, j = 0; i < count; i++) {
-
       // use the cmd:register action of the seneca-user plugin to register the fake users
       // this ensures they are created properly
       this.act('role:user, cmd:register', {
@@ -202,12 +236,12 @@ module.exports = function (options) {
         password: passprefix + i
       }, function (err) {
         if (err) return done(err);
-        if (++j == count) return done();
+        if (++j === count) return done();
       })
     }
   }
 
- 
+
   // to finish the registration of a plugin, you need to return a meta data obect that
   // defines the name of the plugin, and it's tag value (if any, used if there is more than one instance of the same plugin)
   // here, you also define an express session store
@@ -215,7 +249,6 @@ module.exports = function (options) {
   return {
     name: name,
     exportmap: {
-      
     }
   }
 }

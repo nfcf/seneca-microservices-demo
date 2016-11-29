@@ -41,11 +41,11 @@
                    multiple="{{vm.options.multiSelect}}"
                    ng-model="vm.selectedUsers"
                    md-progress="vm.refreshPromise">
-                <thead md-head md-order="vm.query.order">
+                <thead md-head md-order="vm.query.sort">
                     <tr md-row>
                         <th md-column md-order-by="email"><span translate="EMAIL"></span></th>
                         <th md-column md-order-by="name"><span translate="NAME"></span></th>
-                        <th md-column md-order-by="roles[0]"><span translate="ROLE"></span></th>
+                        <th md-column md-order-by="role"><span translate="ROLE"></span></th>
                         <th md-column md-order-by="target_weekly_distance"><span translate="TARGET_WEEKLY_DISTANCE"</th>
                     </tr>
                 </thead>
@@ -53,11 +53,11 @@
                     <tr md-row md-select="user"
                         md-select-id="id"
                         md-auto-select="vm.options.autoSelect"
-                        ng-repeat="user in vm.users | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+                        ng-repeat="user in vm.users | orderBy: vm.query.sort | limitTo: vm.query.limit : (vm.query.page-1) * vm.query.limit">
                         <td md-cell ng-click="vm.editItem($event, user)">{{user.email}}</td>
                         <td md-cell ng-click="vm.editItem($event, user)">{{user.name}}</td>
-                        <td md-cell ng-click="vm.editItem($event, user)">{{user.roles[0]}}</td>
-                        <td md-cell ng-click="vm.editItem($event, user)">{{user.target_weekly_distance}}</td>
+                        <td md-cell ng-click="vm.editItem($event, user)">{{ user.admin ? 'Administrator' : user.manager ? 'User Manager' : 'User' }}</td>
+                        <td md-cell ng-click="vm.editItem($event, user)">{{user.targetWeeklyDistance}}</td>
                     </tr>
                 </tbody>
             </table>

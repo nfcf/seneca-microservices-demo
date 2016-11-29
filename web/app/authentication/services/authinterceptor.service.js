@@ -30,7 +30,7 @@
         }
 
         function responseError (rejection) {
-            if (rejection.status === 401) {
+            if (rejection.status === 401 && rejection.config.method === 'GET') {
                 $cookieStore.remove('authToken');
                 $location.path('/');
             }
