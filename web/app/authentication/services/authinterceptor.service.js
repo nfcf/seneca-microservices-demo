@@ -1,40 +1,38 @@
 (function () {
-    'use strict';
+  'use strict';
 
-    angular
-        .module('app.authentication.services')
-        .factory('AuthInterceptor', AuthInterceptor);
+  angular
+    .module('app.authentication.services')
+    .factory('AuthInterceptor', AuthInterceptor);
 
-    AuthInterceptor.$inject = ['$cookieStore', '$location', '$q'];
+  AuthInterceptor.$inject = ['$cookieStore', '$location', '$q'];
 
-    function AuthInterceptor($cookieStore, $location, $q) {
+  function AuthInterceptor($cookieStore, $location, $q) {
+    var AuthInterceptor = {
+      request: request,
+      responseError: responseError
+    };
+    return AuthInterceptor;
 
-        var AuthInterceptor = {
-            request: request,
-            responseError: responseError
-        };
-        return AuthInterceptor;
+    /////////////////////
 
-        /////////////////////
+    function request(config) {
+      config.headers = config.headers || {};
 
-        function request (config) {
+      var authToken = $cookieStore.get('authToken');
+      if (authToken && authToken.login) {
+        config.headers.Authorization = authToken.login.token;
+      }
 
-            config.headers = config.headers || {};
-
-            var authToken = $cookieStore.get('authToken');
-            if (authToken) {
-                config.headers.Authorization = authToken.login.token;
-            }
-
-            return config;
-        }
-
-        function responseError (rejection) {
-            if (rejection.status === 401 && rejection.config.method === 'GET') {
-                $cookieStore.remove('authToken');
-                $location.path('/');
-            }
-            return $q.reject(rejection);
-        }
+      return config;
     }
+
+    function responseError(rejection) {
+      if (rejection.status === 401 && rejection.config.method === 'GET') {
+        $cookieStore.remove('authToken');
+        $location.path('/');
+      }
+      return $q.reject(rejection);
+    }
+  }
 })();

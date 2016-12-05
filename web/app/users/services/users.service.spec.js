@@ -1,155 +1,171 @@
 describe('Users service', function () {
-    var Users, $q, $httpBackend;
+  var Users, $q, $httpBackend, apiBaseURL;
 
-    beforeEach(angular.mock.module('app'));
-    beforeEach(angular.mock.module('app.users.services'));
+  beforeEach(angular.mock.module('app'));
+  beforeEach(angular.mock.module('app.users.services'));
 
-    beforeEach(inject(function (_Users_, _$q_, _$httpBackend_, _apiBaseURL_) {
-        Users = _Users_;
-        $q = _$q_;
-        $httpBackend = _$httpBackend_;
-        apiBaseURL = _apiBaseURL_;
+  beforeEach(inject(function (_Users_, _$q_, _$httpBackend_, _apiBaseURL_) {
+    Users = _Users_;
+    $q = _$q_;
+    $httpBackend = _$httpBackend_;
+    apiBaseURL = _apiBaseURL_;
 
-        $httpBackend.when('GET', 'resources/locale-en.json').respond({ HEADER: 'Header' });
-        $httpBackend.when('GET', 'resources/locale-pt.json').respond({ HEADER: 'Header' });
-    }));
+    $httpBackend.when('GET', 'resources/locale-en.json').respond({
+      HEADER: 'Header'
+    });
+    $httpBackend.when('GET', 'resources/locale-pt.json').respond({
+      HEADER: 'Header'
+    });
+  }));
 
-    it('should exist', function () {
-        expect(Users).toBeDefined();
+  it('should exist', function () {
+    expect(Users).toBeDefined();
+  });
+
+  describe('.list()', function () {
+    var result;
+
+    beforeEach(function () {
+      // Initialize our local result object to an empty object before each test
+      result = {};
+
+      // Spy on our service call but allow it to continue to its implementation
+      spyOn(Users, 'list').and.callThrough();
     });
 
-    describe('.list()', function () {
-        var result;
+    it('should return a list of users', function () {
+      var action = '/api/v1/users/';
+      var query = {};
+      var response = [{
+        id: 1
+      }, {
+        id: 2
+      }, {
+        id: 3
+      }];
 
-        beforeEach(function () {
-            // Initialize our local result object to an empty object before each test
-            result = {};
+      // Declare the endpoint we expect our service to hit and provide it with our mocked return values
+      $httpBackend.whenGET(apiBaseURL + action).respond(200, $q.when(response));
 
-            // Spy on our service call but allow it to continue to its implementation
-            spyOn(Users, "list").and.callThrough();
-        });
+      expect(Users.list).not.toHaveBeenCalled();
+      expect(result).toEqual({});
 
-        it('should return a list of users', function () {
-            var action = '/api/v1/users/';
-            var query = {};
-            var response = [{id: 1}, {id: 2}, {id: 3}];
+      Users.list(query).then(function (res) {
+        result = res.data;
+      });
 
-            // Declare the endpoint we expect our service to hit and provide it with our mocked return values
-            $httpBackend.whenGET(apiBaseURL + action).respond(200, $q.when(response));
+      // Flush pending HTTP requests
+      $httpBackend.flush();
 
-            expect(Users.list).not.toHaveBeenCalled();
-            expect(result).toEqual({});
+      expect(Users.list).toHaveBeenCalledWith(query);
+      expect(result.$$state.value.length).toEqual(3);
+    });
+  });
 
-            Users.list(query).then(function (res) {
-                result = res.data;
-            });
+  describe('.get()', function () {
+    var result;
 
-            // Flush pending HTTP requests
-            $httpBackend.flush();
+    beforeEach(function () {
+      // Initialize our local result object to an empty object before each test
+      result = {};
 
-            expect(Users.list).toHaveBeenCalledWith(query);
-            expect(result.$$state.value.length).toEqual(3);
-        });
+      // Spy on our service call but allow it to continue to its implementation
+      spyOn(Users, 'get').and.callThrough();
     });
 
-    describe('.get()', function () {
-        var result;
+    it('should return a specific user', function () {
+      var action = '/api/v1/users/';
+      var id = 1;
+      var response = {
+        id: 1
+      };
 
-        beforeEach(function () {
-            // Initialize our local result object to an empty object before each test
-            result = {};
+      // Declare the endpoint we expect our service to hit and provide it with our mocked return values
+      $httpBackend.whenGET(apiBaseURL + action + id + '/').respond(200, $q.when(response));
 
-            // Spy on our service call but allow it to continue to its implementation
-            spyOn(Users, "get").and.callThrough();
-        });
+      expect(Users.get).not.toHaveBeenCalled();
+      expect(result).toEqual({});
 
-        it('should return a specific user', function () {
-            var action = '/api/v1/users/';
-            var id = 1;
-            var response = { id: 1 };
+      Users.get(id).then(function (res) {
+        result = res.data;
+      });
 
-            // Declare the endpoint we expect our service to hit and provide it with our mocked return values
-            $httpBackend.whenGET(apiBaseURL + action + id + '/').respond(200, $q.when(response));
+      // Flush pending HTTP requests
+      $httpBackend.flush();
 
-            expect(Users.get).not.toHaveBeenCalled();
-            expect(result).toEqual({});
+      expect(Users.get).toHaveBeenCalledWith(id);
+      expect(result.$$state.value.id).toEqual(1);
+    });
+  });
 
-            Users.get(id).then(function (res) {
-                result = res.data;
-            });
+  describe('.destroy()', function () {
+    var result;
 
-            // Flush pending HTTP requests
-            $httpBackend.flush();
+    beforeEach(function () {
+      // Initialize our local result object to an empty object before each test
+      result = {};
 
-            expect(Users.get).toHaveBeenCalledWith(id);
-            expect(result.$$state.value.id).toEqual(1);
-        });
+      // Spy on our service call but allow it to continue to its implementation
+      spyOn(Users, 'destroy').and.callThrough();
     });
 
-    describe('.destroy()', function () {
-        var result;
+    it('should return success if the operation succeeds', function () {
+      var action = '/api/v1/users/';
+      var meal = {
+        id: 1
+      };
+      var response = {};
 
-        beforeEach(function () {
-            // Initialize our local result object to an empty object before each test
-            result = {};
+      // Declare the endpoint we expect our service to hit and provide it with our mocked return values
+      $httpBackend.whenDELETE(apiBaseURL + action + meal.id + '/').respond(200, $q.when(response));
 
-            // Spy on our service call but allow it to continue to its implementation
-            spyOn(Users, "destroy").and.callThrough();
-        });
+      expect(Users.destroy).not.toHaveBeenCalled();
+      expect(result).toEqual({});
 
-        it('should return success if the operation succeeds', function () {
-            var action = '/api/v1/users/';
-            var meal = {id: 1};
-            var response = {};
+      Users.destroy(meal).then(function (res) {
+        result = res.data;
+      });
 
-            // Declare the endpoint we expect our service to hit and provide it with our mocked return values
-            $httpBackend.whenDELETE(apiBaseURL + action + meal.id + '/').respond(200, $q.when(response));
+      // Flush pending HTTP requests
+      $httpBackend.flush();
 
-            expect(Users.destroy).not.toHaveBeenCalled();
-            expect(result).toEqual({});
+      expect(Users.destroy).toHaveBeenCalledWith(meal);
+    });
+  });
 
-            Users.destroy(meal).then(function (res) {
-                result = res.data;
-            });
+  describe('.update()', function () {
+    var result;
 
-            // Flush pending HTTP requests
-            $httpBackend.flush();
+    beforeEach(function () {
+      // Initialize our local result object to an empty object before each test
+      result = {};
 
-            expect(Users.destroy).toHaveBeenCalledWith(meal);
-        });
+      // Spy on our service call but allow it to continue to its implementation
+      spyOn(Users, 'update').and.callThrough();
     });
 
-    describe('.update()', function () {
-        var result;
+    it('should return success if the operation succeeds', function () {
+      var action = '/api/v1/users/';
+      var meal = {
+        id: 1,
+        description: 'update'
+      };
+      var response = {};
 
-        beforeEach(function () {
-            // Initialize our local result object to an empty object before each test
-            result = {};
+      // Declare the endpoint we expect our service to hit and provide it with our mocked return values
+      $httpBackend.whenPUT(apiBaseURL + action + meal.id + '/').respond(200, $q.when(response));
 
-            // Spy on our service call but allow it to continue to its implementation
-            spyOn(Users, "update").and.callThrough();
-        });
+      expect(Users.update).not.toHaveBeenCalled();
+      expect(result).toEqual({});
 
-        it('should return success if the operation succeeds', function () {
-            var action = '/api/v1/users/';
-            var meal = { id: 1, description: 'update' };
-            var response = {};
+      Users.update(meal).then(function (res) {
+        result = res.data;
+      });
 
-            // Declare the endpoint we expect our service to hit and provide it with our mocked return values
-            $httpBackend.whenPUT(apiBaseURL + action + meal.id + '/').respond(200, $q.when(response));
+      // Flush pending HTTP requests
+      $httpBackend.flush();
 
-            expect(Users.update).not.toHaveBeenCalled();
-            expect(result).toEqual({});
-
-            Users.update(meal).then(function (res) {
-                result = res.data;
-            });
-
-            // Flush pending HTTP requests
-            $httpBackend.flush();
-
-            expect(Users.update).toHaveBeenCalledWith(meal);
-        });
+      expect(Users.update).toHaveBeenCalledWith(meal);
     });
-
+  });
 });

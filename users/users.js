@@ -177,6 +177,14 @@ module.exports = function (options) {
     var entity = user_entity.make$();
     entity.load$(args.entity_id, function (err, res) {
       if (!err) done(err);
+      else if ((res.admin && !args.user.admin) ||
+          (res.manager && !args.user.admin && !args.user.manager)) {
+        return done(null, {
+          http$: { status: 401 },
+          ok: false,
+          why: 'Not Authorized.'
+        });
+      }
 
       res.active = false;
       res.save$(function (err, res) {
@@ -189,7 +197,7 @@ module.exports = function (options) {
     var seneca = this;
 
     args.admin = args.admin || false;
-    args.manager = false;
+    args.manager = args.manager || false;
     args.targetWeeklyDistance = 20;
 
     setUserPermissions(args);
@@ -216,29 +224,26 @@ module.exports = function (options) {
   //
   // result: no value
   function fakeUsers(args, done) {
-    var users = args.users
+    var seneca = this;
 
-    if (!users) return done();
-    if (0 === users.count) return done();
+    seneca.act('role:user, cmd:register', {
+      email: 'manager@gmail.com',
+      name: 'Manager',
+      password: 'manager',
+      manager: true
+    }, function (err) {
+      if (err) return done(err);
+    });
 
-    var count = users.count || 4;
-    var nickprefix = users.nickprefix || 'u'
-    var nameprefix = users.nameprefix || 'n'
-    var passprefix = users.passprefix || 'p'
-
-    // we can use for loop here, as it does not matter if we hit the in-memory database hard
-    for (var i = 0, j = 0; i < count; i++) {
-      // use the cmd:register action of the seneca-user plugin to register the fake users
-      // this ensures they are created properly
-      this.act('role:user, cmd:register', {
-        email: nickprefix + i + '@gmail.com',
-        name: nameprefix + i,
-        password: passprefix + i
-      }, function (err) {
-        if (err) return done(err);
-        if (++j === count) return done();
-      })
-    }
+    seneca.act('role:user, cmd:register', {
+      email: 'user@gmail.com',
+      name: 'User',
+      password: 'user',
+      manager: true
+    }, function (err) {
+      if (err) return done(err);
+      return done();
+    });
   }
 
 

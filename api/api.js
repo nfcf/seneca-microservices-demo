@@ -45,7 +45,7 @@ module.exports = function (options) {
   seneca.add({ role: name, cmd: 'runs_load' }, runsLoad);
   seneca.add({ role: name, cmd: 'runs_list' }, runsList);
   seneca.add({ role: name, cmd: 'runs_remove' }, runsRemove);
-  seneca.add({ role: name, cmd: 'runs_getstats' }, runsGetStats);
+  seneca.add({ role: name, cmd: 'runs_get_stats' }, runsGetStats);
 
   // the init:name action is special - it is invoked for each
   // plugin, in order, after all the plugins are loaded
@@ -156,6 +156,7 @@ module.exports = function (options) {
     seneca.act({
       role: 'runs',
       cmd: 'save',
+      user: args.user,
       entity: args.entity
     }, function (err, res) {
       if (err) done(err);
@@ -182,6 +183,7 @@ module.exports = function (options) {
     seneca.act({
       role: 'runs',
       cmd: 'list',
+      user: args.user,
       query: {
         filter: args.filter,
         sort$: args.sort,
@@ -212,7 +214,7 @@ module.exports = function (options) {
 
     seneca.act({
       role: 'runs',
-      cmd: 'getstats',
+      cmd: 'getstats'
     }, function (err, res) {
       if (err) done(err);
       else done(null, res);
@@ -328,8 +330,8 @@ module.exports = function (options) {
           alias: 'runs/:entity_id/',
           DELETE: setContext
         },
-        runs_getstats: {
-          alias: 'runs/getstats/',
+        runs_get_stats: {
+          alias: 'runs/get/stats/',
           GET: setContext
         }
       }

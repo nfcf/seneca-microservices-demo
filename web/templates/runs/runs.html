@@ -29,7 +29,7 @@
 
     <md-card>
         <md-toolbar class="md-table-toolbar md-default"
-                    ng-hide="vm.options.rowSelection && vm.selectedRuns.length">
+                    ng-hide="vm.options.rowSelection && vm.selectedItems.length">
             <div class="md-toolbar-tools">
                 <md-icon class="material-icons">search</md-icon>
                 <form name="vm.filterForm" layout="row">
@@ -92,15 +92,15 @@
         </md-toolbar>
 
         <md-toolbar class="md-table-toolbar alternate"
-                    ng-show="vm.options.rowSelection && vm.selectedRuns.length">
+                    ng-show="vm.options.rowSelection && vm.selectedItems.length">
             <div class="md-toolbar-tools">
-                <span>{{vm.selectedRuns.length}} <span translate="SELECTED_ITEMS"></span></span>
+                <span>{{vm.selectedItems.length}} <span translate="SELECTED_ITEMS"></span></span>
                 <div flex></div>
                 <md-button class="md-icon-button" aria-label="Delete"
                            ng-click="vm.deleteItems()">
                     <md-tooltip>{{ 'BUTTON_DELETE' | translate }}</md-tooltip>
-                    <md-icon ng-if="vm.selectedRuns.length == 1">delete</md-icon>
-                    <md-icon ng-if="vm.selectedRuns.length > 1">delete_sweep</md-icon>
+                    <md-icon ng-if="vm.selectedItems.length == 1">delete</md-icon>
+                    <md-icon ng-if="vm.selectedItems.length > 1">delete_sweep</md-icon>
                 </md-button>
             </div>
         </md-toolbar>
@@ -108,14 +108,14 @@
         <md-table-container>
             <table md-table md-row-select="vm.options.rowSelection"
                    multiple="{{vm.options.multiSelect}}"
-                   ng-model="vm.selectedRuns"
+                   ng-model="vm.selectedItems"
                    md-progress="vm.refreshPromise">
                 <thead md-head md-order="vm.query.order">
                     <tr md-row>
                         <th md-column md-order-by="createdBy" ng-if="vm.showUserColumn"><span translate="USER"></span></th>
                         <th md-column md-order-by="description"><span translate="DESCRIPTION"></span></th>
-                        <th md-column md-order-by="distance_in_km" md-numeric><span translate="DISTANCE"></span></th>
-                        <th md-column md-order-by="eatenOn"><span translate="DATETIME"</th>
+                        <th md-column md-order-by="distance" md-numeric><span translate="DISTANCE"></span></th>
+                        <th md-column md-order-by="occurredAt"><span translate="DATETIME"</th>
                     </tr>
                 </thead>
                 <tbody md-body>
@@ -125,8 +125,8 @@
                         ng-repeat="run in vm.runs | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
                         <td md-cell ng-click="vm.editItem($event, run)" ng-if="vm.showUserColumn">{{meal.createdBy}}</td>
                         <td md-cell ng-click="vm.editItem($event, run)">{{run.description}}</td>
-                        <td md-cell ng-click="vm.editItem($event, run)">{{run.distance_in_km}}</td>
-                        <td md-cell ng-click="vm.editItem($event, run)">{{run.eatenOn | date : 'yyyy-MM-dd HH:mm' }}</td>
+                        <td md-cell ng-click="vm.editItem($event, run)">{{run.distance}}</td>
+                        <td md-cell ng-click="vm.editItem($event, run)">{{run.occurredAt | date : 'yyyy-MM-dd HH:mm' }}</td>
                     </tr>
                 </tbody>
             </table>
