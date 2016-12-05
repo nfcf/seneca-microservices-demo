@@ -2,7 +2,7 @@
 'use strict';
 
 // load system modules
-var util = require('util');
+var Util = require('util');
 
 // define a seneca plugin
 // loaded in app.js with seneca.use('<plugin_name>')
@@ -53,7 +53,7 @@ module.exports = function (options) {
         session_ent.remove$(sid, cb);
       }
     }
-    util.inherits(SessionStore, session.Store);
+    Util.inherits(SessionStore, session.Store);
 
     return new SessionStore();
   }
