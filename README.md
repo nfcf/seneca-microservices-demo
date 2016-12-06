@@ -6,16 +6,15 @@ Project I've decided to build for fun and as a way to learn about a few new tech
  - AngularJS 2 ([https://angular.io](https://angular.io))
 
 The project functionality in itself is pretty basic - it's a "Running Log" application, which means 
-that when the user goes running he can log the distance for that day. However, there's also user management
-and different user roles and permissions supported to keep things interesting.
+that when a user goes for a run he can log the distance for that day. However, to keep things interesting, 
+there's also user management and different user roles and permissions supported.
 
 
 The current state of the project has a Microservices architecture implemented using senecaJS and Express - which I will detail below.
 
-```
-The current frontend is AngularJS 1.5 - re-used the skeleton from one of my previous projects - but I'll
+**NOTE: **The current frontend is AngularJS 1.5 - re-used the skeleton from one of my previous projects - but I'll
 go down the road of migrating to AngularJS 2 in the next days / weeks
-```
+
 
 ## Backend Architecture
 
@@ -77,7 +76,8 @@ cd users; node app.js
 cd runs; node app.js
 ```
 
-If all goes well, all 3 services start running and you can now access the frontend by opening [localhost:3333](http://localhost:3333)
+If all goes well, all 3 services start running and you can now access the frontend by opening [localhost:3333](http://localhost:3333).
+
 For logging in, you can use:
 - admin@gmail.com | admin
 - manager@gmail.com | manager
