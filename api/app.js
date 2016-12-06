@@ -1,4 +1,4 @@
-/* Main application entry point.
+/* Main service entry point.
  * Run with:
  * $ node app.js
  *
@@ -6,7 +6,7 @@
  * folder. Copy options.example.js to create this file. It is loaded
  * as a node.js module, so you can use JavaScript inside it.
  *
- * The --env command line argument can be used to start the app in a 
+ * The --env command line argument can be used to start the app in a
  * development mode for debugging:
  * $ node app.js --env=development
  *
@@ -60,7 +60,7 @@ var options_folder = 'production' === env ? '/home/deploy/' : './';
 var options_file = options_folder + 'options.app.js';
 try {
   require('fs').statSync(options_file);
-} 
+}
 catch (e) {
   process.exit(!console.error('Please copy options.example.js to ' + options_file + ': ' + e))
 }

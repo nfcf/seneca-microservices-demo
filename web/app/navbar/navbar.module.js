@@ -15,13 +15,12 @@
 
   angular.module('app.navbar')
     .directive('navBar', function () {
-        return {
-            retrict: 'AE',
-            replace: 'true',
-            templateUrl: '/templates/navbar/navbar.html',
-            controller: 'NavBarController',
-            controllerAs: 'vm',
-        };
+      return {
+        retrict: 'AE',
+        replace: 'true',
+        templateUrl: '/templates/navbar/navbar.html',
+        controller: 'NavBarController',
+        controllerAs: 'vm'
+      };
     });
-
 })();

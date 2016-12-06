@@ -18,8 +18,6 @@
     };
     return Users;
 
-    /////////////////////
-
     function destroy(item) {
       return $http.delete(apiBaseURL + '/api/v1/users/' + item.id + '/');
     }

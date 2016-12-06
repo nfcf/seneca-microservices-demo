@@ -3,7 +3,7 @@
 
 // load utility modules
 var _ = require('lodash'); // see http://npmjs.org/package/lodash
-var async = require('async'); // see http://npmjs.org/package/async
+var Async = require('async'); // see http://npmjs.org/package/async
 
 // the name of the plugin
 // because plugins can be registered more than once (using tags)
@@ -60,7 +60,7 @@ module.exports = function (options) {
     });
 
     // need to call these actions one after the other in series
-    async.series([
+    Async.series([
       function (callback) {
         seneca.act({ role: 'basic', cmd: 'define_sys_entity' }, { list: ['-/sys/user'] }, function(err, res) {
           callback(err);
@@ -238,7 +238,7 @@ module.exports = function (options) {
       email: 'user@gmail.com',
       name: 'User',
       password: 'user',
-      manager: true
+      manager: false
     }, function (err) {
       if (err) return done(err);
       return done();

@@ -1,9 +1,6 @@
 /* This file is PUBLIC DOMAIN. You are free to cut-and-paste to start your own projects, of any kind */
 'use strict';
 
-// load system modules
-var util = require('util');
-
 // load utility modules
 var _ = require('lodash'); // see http://npmjs.org/package/lodash
 
@@ -202,6 +199,7 @@ module.exports = function (options) {
     seneca.act({
       role: 'runs',
       cmd: 'remove',
+      user: args.user,
       entity_id: args.entity_id
     }, function (err, res) {
       if (err) done(err);
@@ -214,7 +212,8 @@ module.exports = function (options) {
 
     seneca.act({
       role: 'runs',
-      cmd: 'getstats'
+      cmd: 'getstats',
+      user: args.user
     }, function (err, res) {
       if (err) done(err);
       else done(null, res);

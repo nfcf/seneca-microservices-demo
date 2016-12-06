@@ -43,7 +43,6 @@ module.exports = function (options) {
   seneca.add({init: name}, init);
 
 
-
   // ACTION: initialize plugin
   // args: none
   //
@@ -64,8 +63,8 @@ module.exports = function (options) {
   function save (args, done) {
     var seneca = this;
 
-    if (!args.user.admin &&
-        (args.entity.userId !== args.user.id)) {
+    if (!args.user.admin && !!args.entity.createdBy &&
+        (args.entity.createdBy !== args.user.email)) {
       return done(null, {
         http$: { status: 401 },
         ok: false,
@@ -77,7 +76,7 @@ module.exports = function (options) {
     var entity = run_entity.make$();
 
     entity.active = true;
-    entity.userId = args.user.id;
+    entity.createdBy = args.user.email;
     for (var k in args.entity) entity[k] = args.entity[k];
 
     entity.save$(function(err, res) {
@@ -91,7 +90,7 @@ module.exports = function (options) {
     var entity = run_entity.make$();
     entity.load$(args.entity_id, function (err, res) {
       if (!args.user.admin &&
-          (res.userId !== args.user.id)) {
+        (args.entity.createdBy !== args.user.email)) {
         return done(null, {
           http$: { status: 401 },
           ok: false,
@@ -125,7 +124,7 @@ module.exports = function (options) {
 
       res = _.filter(res, function (ent) {
         return ent.active &&
-               (args.user.admin || ent.userId === args.user.id) &&
+               (args.user.admin || ent.createdBy === args.user.email) &&
                (!filter ||
                (new Date(filter.startDate) <= new Date(ent.occurredAt).withoutTime() &&
                new Date(filter.endDate) >= new Date(ent.occurredAt).withoutTime() &&
@@ -144,7 +143,7 @@ module.exports = function (options) {
     entity.load$(args.entity_id, function (err, res) {
       if (!err) done(err);
       else if (!args.user.admin &&
-          (res.userId !== args.user.id)) {
+              (res.createdBy !== args.user.email)) {
         return done(null, {
           http$: { status: 401 },
           ok: false,
@@ -169,7 +168,9 @@ module.exports = function (options) {
       var stats = {};
       stats.weekly_distance = 0;
       for (var i = 0; i < res.length; i++) {
-        stats.weekly_distance += res[i].distance;
+        if (res[i].createdBy === args.user.email) {
+          stats.weekly_distance += res[i].distance;
+        }
       }
       done(err, stats);
     });

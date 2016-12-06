@@ -12,31 +12,31 @@ there's also user management and different user roles and permissions supported.
 
 The current state of the project has a Microservices architecture implemented using senecaJS and Express - which I will detail below.
 
-**NOTE: **The current frontend is AngularJS 1.5 - re-used the skeleton from one of my previous projects - but I'll
+**NOTE:** The current frontend is AngularJS 1.5 - re-used the skeleton from one of my previous projects - but I'll
 go down the road of migrating to AngularJS 2 in the next days / weeks
 
 
 ## Backend Architecture
 
-There are 3 MicroServices in place. For simplicity, they're all here under the same repo. For more complex projects
-I would recommend having them as separete repos:
+There are 3 services in place. For simplicity, they're all here under the same repo. For more complex projects
+I would recommend having them as separate repos:
 - API
 - USERS
 - RUNS
 
-The API service is the single point of contact with the frontend world. I'm using seneca-web and the express framework
+The API service is the single point of contact with the frontend world. I'm using seneca-web and the nodeJS express framework
 to make a few REST endpoints available. To keep things simple, the API service is also serving the SPA frontend.
 
-Both the USERS and RUNS Microservices are clients to a AMQP RabbitMQ "internal" queue, configured to listen to messages with specific patterns.
+Both the USERS and RUNS services are clients to a AMQP RabbitMQ "internal" queue, configured to listen to messages with specific patterns.
 They each have their own database and I've tried to keep them short and simple.
 
 Basically how it works is like this:
 - When the user logs in (in the frontend), there's an Ajax REST call to the API service.
-The API Microservice then publishes a user login message to the internal queue which the USERS service will pick up and act upon.
+The API service then publishes a user login message to the internal queue which the USERS service will pick up and act upon.
 If everything is fine it returns success to the API service which in turns logs in the user.
 - A similar exchange of messages happens when the user wants to log a run.
 The frontend calls the API service - authentication is made in this service using JWT tokens - and forwards the request to the RUNS service through the message queue.
-In case user information is required to handle the request, an extra internal message is exchanged between the services.
+In case user information is required to handle the request, an extra internal message is exchanged between the services to get the user object.
 
 Object permissiosn are handled each on their respective service (USERS and RUNS). Unfortunately I couldn't get the seneca-perm module to work for some reason and I had
 to do permissions check the old fashioned way... (will hopefully revisit this in the future).

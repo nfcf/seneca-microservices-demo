@@ -1,4 +1,4 @@
-/* Main application entry point.
+/* Main service entry point.
  * Run with:
  * $ node app.js
  *
@@ -91,14 +91,7 @@ else {
 }
 
 // register the seneca-user plugin - this provides user account business logic
-seneca.use('user', {
-  confirm: true
-});
-
-// register the seneca-auth plugin - this provides authentication business logic
-seneca.use('auth');
-
-seneca.use('account');
+seneca.use('user', { confirm: true });
 
 // register the seneca-data-editor plugin - this provides a user interface for data admin
 // Open the /data-editor url path to edit data! (you must be an admin, or on localhost)

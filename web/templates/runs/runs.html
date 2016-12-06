@@ -123,7 +123,7 @@
                         md-select-id="id"
                         md-auto-select="vm.options.autoSelect"
                         ng-repeat="run in vm.runs | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
-                        <td md-cell ng-click="vm.editItem($event, run)" ng-if="vm.showUserColumn">{{meal.createdBy}}</td>
+                        <td md-cell ng-click="vm.editItem($event, run)" ng-if="vm.showUserColumn">{{run.createdBy}}</td>
                         <td md-cell ng-click="vm.editItem($event, run)">{{run.description}}</td>
                         <td md-cell ng-click="vm.editItem($event, run)">{{run.distance}}</td>
                         <td md-cell ng-click="vm.editItem($event, run)">{{run.occurredAt | date : 'yyyy-MM-dd HH:mm' }}</td>

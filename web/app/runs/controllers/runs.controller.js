@@ -62,12 +62,7 @@
     function activate() {
       angular.forEach(['AUTH_TOKEN_UPDATED', 'LANGUAGE_UPDATED'], function (ev) {
         $scope.$on(ev, function () {
-          var userInfo = Authentication.getCookiesAuthToken();
-          if (!!userInfo) {
-            setWelcomeMessages(vm.currentWeeklyDistance);
-
-            vm.showUserColumn = userInfo.user.admin === true;
-          }
+          updateControls();
         });
       });
 
@@ -79,7 +74,17 @@
         vm.refresh();
       });
 
+      updateControls();
       refresh();
+    }
+
+    function updateControls() {
+      var userInfo = Authentication.getCookiesAuthToken();
+      if (!!userInfo) {
+        setWelcomeMessages(vm.currentWeeklyDistance);
+
+        vm.showUserColumn = userInfo.user.admin === true;
+      }
     }
 
     function refresh() {
