@@ -6,7 +6,6 @@ module.exports = {
     port: 3334,
   },
 
-
   // custom options for the plugin which contains the 
   // core business logic of the app
   runs: {

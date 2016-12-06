@@ -12,13 +12,6 @@ module.exports = {
     amqp_url: 'amqp://guest:guest@localhost:5672/',
     
     admin: { pass: 'admin' }, // admin user password, ** CHANGE THIS ** for production
-
-    // set up test users and events for debugging
-    dev_setup: {
-      users:{ 
-        count: 4 
-      },
-    }
   },
 
 }

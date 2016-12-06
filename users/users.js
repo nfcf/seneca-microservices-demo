@@ -86,8 +86,7 @@ module.exports = function (options) {
         seneca.act(_.extend({
           role: name,
           cmd: 'fake_users',
-          default$: {},
-          users: options.dev_setup.users
+          default$: {}
         }), function(err, res) {
           callback(err);
         });
