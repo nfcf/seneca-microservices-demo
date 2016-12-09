@@ -1,0 +1,51 @@
+﻿{
+  "BY": "by",
+  "LOGIN": "LOGIN",
+  "REGISTER": "REGISTER",
+  "EMAIL": "Email",
+  "PASSWORD": "Password",
+  "CONFIRM_PASSWORD": "Repeat Password",
+  "GO": "GO",
+  "NEXT": "NEXT",
+  "FORGOT_PASSWORD": "Forgot your password?",
+  
+  "WELCOME_USER": "Welcome {{ user }}!",
+  "WELCOME_STATS": "You ran {{ currentWeeklyDistance }}km of your target weekly goal of {{ targetWeeklyDistance }}km!",
+  "RUNS": "Runs",
+  "USERS": "Users",
+  "USER": "User",
+  "LOGOUT": "Logout",
+  "SEARCH": "Search",
+  "REFRESH": "Refresh",
+  "CLEAR": "Clear",
+  
+  "NAME": "Name",
+  "ROLE": "Role",
+  "DESCRIPTION": "Description",
+  "DISTANCE": "Distance (km)",
+  "TARGET_WEEKLY_DISTANCE": "Target Weekly Distance (km)",
+  "DATETIME": "Date & Time",
+  "DATE": "Date",
+  "TIME": "Time",
+  "FROM": "From: ",
+  "TO": "To: ",
+  
+  "SELECTED_ITEMS": "item(s) selected",
+  "ADD_RUN": "Add Run",
+  "EDIT_RUN": "Edit Run",
+  "EDIT_USER": "Edit User",
+  "EDIT_PROFILE": "Edit Profile",
+  
+  "BUTTON_CANCEL": "Cancel",
+  "BUTTON_SAVE": "Save",
+  "BUTTON_OK": "Ok",
+  "BUTTON_DELETE": "Delete",
+  
+  "CONFIRM": "Confirm",
+  "ARE_YOU_SURE_DELETE": "Are you sure you want to delete the selected item(s)?",
+  
+  "ERROR_REQUIRED": "Required",
+  "ERROR_INVALID_FORMAT": "Invalid Format",
+  "ERROR_MIN_DATE": "Min Date",
+  "ERROR_MAX_DATE": "Max Date"
+}

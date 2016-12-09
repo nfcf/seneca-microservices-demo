@@ -10,33 +10,32 @@ module.exports = {
   auth: {
     prefix: '/auth/',
     default_plugins: {
-      //authRedirect: false,
-      authTokenCookie: false,
+      // authRedirect: false,
+      authTokenCookie: false
     },
-    restrict: '/api',
+    restrict: '/api'
   },
-  
-  "facebook" : {
-    "appId" : "APP_ID",
-    "appSecret" : "APP_SECRET",
-    "urlhost" : "http://localhost:3333",
-    "serviceParams": {
-      "scope" : [
-        "email"
+
+  facebook: {
+    appId: 'APP_ID',
+    appSecret: 'APP_SECRET',
+    urlhost: 'http://localhost:3333',
+    serviceParams: {
+      scope: [
+        'email'
       ]
     }
   },
 
-  "google": {
-    "clientID" : "CLIENT_ID",
-    "clientSecret" : "CLIENT_SECRET",
-    "urlhost" : "http://localhost:3333"
+  google: {
+    clientID: 'CLIENT_ID',
+    clientSecret: 'CLIENT_SECRET',
+    urlhost: 'http://localhost:3333'
   },
 
-  // custom options for the api plugin, which contains the 
+  // custom options for the api plugin, which contains the
   // core business logic of the app
   api: {
-    amqp_url: 'amqp://guest:guest@localhost:5672/',
-  },
-
+    amqp_url: 'amqp://guest:guest@localhost:5672/'
+  }
 }

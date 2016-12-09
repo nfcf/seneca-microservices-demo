@@ -1,0 +1,34 @@
+﻿<div>
+    <div class="page-title">
+        <h1>Running Log</h1>
+        <span><i class='fa fa-code'></i> <span translate="BY"></span> Nuno Freire</span>
+        <div layout="row" layout-align="center center">
+            <md-button id="en" style="min-width: 30px;"
+                       ng-class="(vm.language == 'en') ? 'md-warn' : ''"
+                       ng-click="vm.langEN()">EN</md-button>
+            <md-button id="pt" style="min-width: 30px;"
+                       ng-class="(vm.language == 'pt') ? 'md-warn' : ''"
+                       ng-click="vm.langPT()">PT</md-button>
+        </div>
+    </div>
+
+    <md-toolbar class="md-whiteframe-1dp" layout="column"
+                ng-show="vm.showNavBar">
+        <div class="md-toolbar-tools">
+            <div class="md-title" ng-bind="vm.pageTitle"></div>
+            <div flex></div>
+            <md-button class="md-icon-button" ng-click="vm.runs()">
+                <md-tooltip>{{ 'RUNS' | translate }}</md-tooltip>
+                <md-icon>directions_run</md-icon>
+            </md-button>
+            <md-button class="md-icon-button" ng-if="vm.showUsersMenuItem" ng-click="vm.users()">
+                <md-tooltip>{{ 'USERS' | translate }}</md-tooltip>
+                <md-icon>people</md-icon>
+            </md-button>
+            <md-button class="md-icon-button" ng-click="vm.logout()">
+                <md-tooltip>{{ 'LOGOUT' | translate }}</md-tooltip>
+                <md-icon>exit_to_app</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+</div>

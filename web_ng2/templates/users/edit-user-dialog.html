@@ -1,0 +1,39 @@
+﻿<md-dialog>
+    <md-dialog-content class="md-dialog-content">
+
+        <h2 class="md-title" ng-bind="vm.dialogTitle"></h2>
+
+        <div class="alert alert-danger" ng-show="vm.error" ng-bind="vm.error"></div>
+
+        <form name="vm.userForm" ng-submit="vm.save()">
+            <div layout="column">
+                <md-input-container ng-if="!vm.editProfileMode">
+                    <label for="email" translate="EMAIL"></label>
+                    <input name="email" ng-model="vm.user.email" required>
+                </md-input-container>
+                <md-input-container>
+                    <label for="name" translate="NAME"></label>
+                    <input name="name" ng-model="vm.user.name" md-maxlength="50" required md-autofocus>
+                </md-input-container>
+                <md-input-container ng-if="!vm.editProfileMode">
+                    <label for="role" translate="ROLE"></label>
+                    <md-select name="role" ng-model="vm.user.role" required>
+                        <md-option ng-repeat="role in vm.roles" ng-value="role.value">
+                            {{role.desc}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container flex>
+                    <label for="distance" translate="TARGET_WEEKLY_DISTANCE"></label>
+                    <input name="distance" type="number" min="0" max="999" ng-model="vm.user.targetWeeklyDistance" required>
+                </md-input-container>
+            </div>
+        </form>
+
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" layout-align="end center">
+        <md-button class="md-primary" type="button" ng-click="vm.cancel()" aria-label="Cancel"><span translate="BUTTON_CANCEL"></span></md-button>
+        <md-button class="md-primary" type="button" ng-click="vm.save()" aria-label="Save" ng-disabled="vm.userForm.$invalid"><span translate="BUTTON_SAVE"></span></md-button>
+    </md-dialog-actions>
+</md-dialog>

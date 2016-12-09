@@ -1,0 +1,14 @@
+﻿<md-dialog>
+    <md-dialog-content class="md-dialog-content">
+        <h2 class="md-title" translate="CONFIRM"></h2>
+
+        <div class="alert alert-danger" ng-show="vm.error" ng-bind="vm.error"></div>
+
+        <p translate="ARE_YOU_SURE_DELETE"></p>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" layout-align="end center">
+        <md-button class="md-primary" type="button" ng-click="vm.cancel()" aria-label="Cancel" md-autofocus><span translate="BUTTON_CANCEL"></span></md-button>
+        <md-button class="md-warn" type="button" ng-click="vm.destroy()" aria-label="Delete"><span translate="BUTTON_DELETE"></span></md-button>
+    </md-dialog-actions>
+</md-dialog>

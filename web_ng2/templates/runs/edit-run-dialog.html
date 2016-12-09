@@ -1,0 +1,49 @@
+﻿<md-dialog>
+    <md-dialog-content class="md-dialog-content">
+
+        <h2 class="md-title" ng-bind="vm.dialogTitle"></h2>
+
+        <div class="alert alert-danger" ng-show="vm.error" ng-bind="vm.error"></div>
+
+        <form name="vm.runForm" ng-submit="vm.save()">
+            <div layout="row">
+                <md-input-container style="padding-right: 20px;">
+                    <label for="description" translate="DESCRIPTION"></label>
+                    <input name="description" ng-model="vm.run.description" md-maxlength="50" required md-autofocus>
+                </md-input-container>
+                <md-input-container flex>
+                    <label for="distance" translate="DISTANCE"></label>
+                    <input name="distance" type="number" min="0" max="999" ng-model="vm.run.distance" required>
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <mdp-date-picker name="occurredDate"
+                                 mdp-placeholder="{{ 'DATE' | translate }}"
+                                 ng-model="vm.run.occurredAt" required>
+                    <div ng-messages="vm.runForm.occurredDate.$error">
+                        <div ng-message="required" translate="ERROR_REQUIRED"></div>
+                        <div ng-message="format" translate="ERROR_INVALID_FORMAT"></div>
+                        <div ng-message="minDate" translate="ERROR_MIN_DATE"></div>
+                        <div ng-message="maxDate" translate="ERROR_MAX_DATE"></div>
+                    </div>
+                </mdp-date-picker>
+                <mdp-time-picker name="occurredTime"
+                                 mdp-placeholder="{{ 'TIME' | translate }}"
+                                 ng-model="vm.run.occurredAt"
+                                 mdp-auto-switch="true" 
+                                 mdp-format="HH:mm" required>
+                    <div ng-messages="vm.runForm.occurredTime.$error">
+                        <div ng-message="required" translate="ERROR_REQUIRED"></div>
+                        <div ng-message="format" translate="ERROR_INVALID_FORMAT"></div>
+                    </div>
+                </mdp-time-picker>
+            </div>
+        </form>
+
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" layout-align="end center">
+        <md-button class="md-primary" type="button" ng-click="vm.cancel()" aria-label="Cancel"><span translate="BUTTON_CANCEL"></span></md-button>
+        <md-button class="md-primary" type="button" ng-click="vm.save()" aria-label="Save" ng-disabled="vm.runForm.$invalid"><span translate="BUTTON_SAVE"></span></md-button>
+    </md-dialog-actions>
+</md-dialog>

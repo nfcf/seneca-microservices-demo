@@ -188,7 +188,9 @@ seneca.ready(function (err) {
 
     // default route for when the URL isn't known...
     app.get('*', function (req, res) {
-      res.redirect('/');
+      if (req.url.indexOf('app') < 0 && req.url.indexOf('@angular') < 0) {
+        res.redirect('/');
+      }
     });
     // start listening for HTTP requests
     server.listen(options.main.port);
