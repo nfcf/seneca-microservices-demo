@@ -1,4 +1,4 @@
-System.register(['@angular/core', '@angular/platform-browser', '@angular/upgrade/static', '@angular/http', 'app/authentication/services/authentication.service'], function(exports_1, context_1) {
+System.register(['@angular/core', '@angular/platform-browser', '@angular/upgrade/static', '@angular/http', 'app/authentication/services/authentication.service', 'app/broadcaster'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['@angular/core', '@angular/platform-browser', '@angular/upgrade
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, platform_browser_1, static_1, http_1, authentication_service_1;
+    var core_1, platform_browser_1, static_1, http_1, authentication_service_1, broadcaster_1;
     var AppModule;
     return {
         setters:[
@@ -28,6 +28,9 @@ System.register(['@angular/core', '@angular/platform-browser', '@angular/upgrade
             },
             function (authentication_service_1_1) {
                 authentication_service_1 = authentication_service_1_1;
+            },
+            function (broadcaster_1_1) {
+                broadcaster_1 = broadcaster_1_1;
             }],
         execute: function() {
             AppModule = (function () {
@@ -42,7 +45,8 @@ System.register(['@angular/core', '@angular/platform-browser', '@angular/upgrade
                             http_1.HttpModule
                         ],
                         providers: [
-                            authentication_service_1.Authentication
+                            authentication_service_1.Authentication,
+                            broadcaster_1.Broadcaster
                         ]
                     }), 
                     __metadata('design:paramtypes', [])

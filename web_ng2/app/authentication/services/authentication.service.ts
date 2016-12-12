@@ -5,6 +5,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { downgradeInjectable } from '@angular/upgrade/static';
+import { Broadcaster } from 'app/broadcaster';
 
 declare var angular: angular.IAngularStatic;
 angular
@@ -13,9 +14,12 @@ angular
 
 @Injectable()
 export class Authentication {
-  static $inject = ['$rootScope', '$cookieStore', '$http', 'apiBaseUrl'];
+  static $inject = ['$cookieStore', '$http', 'Broadcaster', 'apiBaseUrl'];
 
-  constructor(public $rootScope: angular.IRootScopeService, public $cookieStore: angular.cookies.ICookieStoreService, public $http: angular.IHttpService, public apiBaseURL: string) { }
+  constructor(public $cookieStore: angular.cookies.ICookieStoreService, 
+              public $http: angular.IHttpService,
+              public broadcaster: Broadcaster,
+              public apiBaseURL: string) { }
 
   register(email, password, confirmPassword) {
     return this.$http.post(this.apiBaseURL + '/auth/register', {
@@ -55,11 +59,11 @@ export class Authentication {
 
   setCookiesAuthToken(authToken) {
     this.$cookieStore.put('authToken', authToken);
-    this.$rootScope.$broadcast('AUTH_TOKEN_UPDATED');
+    this.broadcaster.broadcast('AUTH_TOKEN_UPDATED');
   }
 
   unauthenticate() {
     this.$cookieStore.remove('authToken');
-    this.$rootScope.$broadcast('AUTH_TOKEN_UPDATED');
+    this.broadcaster.broadcast('AUTH_TOKEN_UPDATED');
   }
 }

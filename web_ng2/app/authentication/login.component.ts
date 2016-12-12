@@ -1,17 +1,16 @@
 
 'use strict';
 
+import { Component } from '@angular/core';
 import { Authentication } from 'app/authentication/services/authentication.service';
 
-declare var angular: angular.IAngularStatic;
-angular
-  .module('app.authentication')
-  .component('Login', {
-    templateUrl: 'app/authentication/login.template.html',
-    controller: LoginController
-  });
+@Component({
+  moduleId: module.id,
+  selector: 'login',
+  templateUrl: 'login.template.html'
+})
 
-class LoginController {
+export class LoginComponent {
   loginError: string;
   registerError: string;
   email: string;

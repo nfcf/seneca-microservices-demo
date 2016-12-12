@@ -19,22 +19,6 @@
       app: 'app',
 
       // angular bundles
-      /*'jquery': 'npm:jquery/dist/jquery.js',
-      'bootstrap': 'npm:bootstrap/dist/js/bootstrap.js',
-      'angular': 'npm:angular/angular.js',
-      'angular-animate': 'npm:angular-animate/angular-animate.js',
-      'angular-aria': 'npm:angular-aria/angular-aria.js',
-      'angular-cookies': 'npm:angular-cookies/angular-cookies.js',
-      'angular-messages': 'npm:angular-messages/angular-messages.js',
-      'angular-material': 'npm:angular-material/angular-material.js',
-      'angular-material-data-table': 'npm:angular-material-data-table/dist/md-data-table.js',
-      'angular-sanitize': 'npm:angular-sanitize/angular-sanitize.js',
-      'angular-translate': 'npm:angular-translate/dist/angular-translate.js',
-      'angular-translate-loader-static-files': 'npm:angular-translate-loader-static-files/angular-translate-loader-static-files.js',
-      'angular-route': 'npm:angular-route/angular-route.js',
-      'mdPickers': 'npm:mdPickers/dist/mdPickers.js',
-      'moment': 'npm:moment/moment.js',*/
-
       '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
       '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
       '@angular/compiler': 'npm:@angular/compiler/bundles/compiler.umd.js',

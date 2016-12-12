@@ -128,4 +128,4 @@ describe('Login controller', function () {
         });
     });
 });
-//# sourceMappingURL=login.controller.spec.js.map
+//# sourceMappingURL=login.component.spec.js.map

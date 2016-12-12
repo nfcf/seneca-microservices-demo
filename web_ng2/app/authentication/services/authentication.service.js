@@ -1,4 +1,4 @@
-System.register(['@angular/core', '@angular/upgrade/static'], function(exports_1, context_1) {
+System.register(['@angular/core', '@angular/upgrade/static', 'app/broadcaster'], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['@angular/core', '@angular/upgrade/static'], function(exports_1
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, static_1;
+    var core_1, static_1, broadcaster_1;
     var Authentication;
     return {
         setters:[
@@ -19,16 +19,20 @@ System.register(['@angular/core', '@angular/upgrade/static'], function(exports_1
             },
             function (static_1_1) {
                 static_1 = static_1_1;
+            },
+            function (broadcaster_1_1) {
+                broadcaster_1 = broadcaster_1_1;
             }],
         execute: function() {
             angular
                 .module('app.authentication.services')
                 .factory('Authentication', static_1.downgradeInjectable(Authentication));
             Authentication = (function () {
-                function Authentication($rootScope, $cookieStore, $http) {
-                    this.$rootScope = $rootScope;
+                function Authentication($cookieStore, $http, broadcaster, apiBaseURL) {
                     this.$cookieStore = $cookieStore;
                     this.$http = $http;
+                    this.broadcaster = broadcaster;
+                    this.apiBaseURL = apiBaseURL;
                 }
                 Authentication.prototype.register = function (email, password, confirmPassword) {
                     return this.$http.post(this.apiBaseURL + '/auth/register', {
@@ -61,18 +65,19 @@ System.register(['@angular/core', '@angular/upgrade/static'], function(exports_1
                 };
                 Authentication.prototype.setCookiesAuthToken = function (authToken) {
                     this.$cookieStore.put('authToken', authToken);
-                    this.$rootScope.$broadcast('AUTH_TOKEN_UPDATED');
+                    this.broadcaster.broadcast('AUTH_TOKEN_UPDATED');
                 };
                 Authentication.prototype.unauthenticate = function () {
                     this.$cookieStore.remove('authToken');
-                    this.$rootScope.$broadcast('AUTH_TOKEN_UPDATED');
+                    this.broadcaster.broadcast('AUTH_TOKEN_UPDATED');
                 };
-                Authentication.$inject = ['$rootScope', '$cookieStore', '$http'];
+                Authentication.$inject = ['$cookieStore', '$http', 'Broadcaster', 'apiBaseUrl'];
                 Authentication = __decorate([
                     core_1.Injectable(), 
-                    __metadata('design:paramtypes', [Object, Object, Function])
+                    __metadata('design:paramtypes', [Object, Function, (typeof (_a = typeof broadcaster_1.Broadcaster !== 'undefined' && broadcaster_1.Broadcaster) === 'function' && _a) || Object, String])
                 ], Authentication);
                 return Authentication;
+                var _a;
             }());
             exports_1("Authentication", Authentication);
         }

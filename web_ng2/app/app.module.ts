@@ -4,6 +4,7 @@ import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpModule } from '@angular/http';
 
 import { Authentication } from 'app/authentication/services/authentication.service';
+import { Broadcaster } from 'app/broadcaster';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { Authentication } from 'app/authentication/services/authentication.servi
     HttpModule
   ],
   providers: [
-    Authentication
+    Authentication,
+    Broadcaster
   ]
 })
 export class AppModule {
