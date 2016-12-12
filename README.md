@@ -1,9 +1,8 @@
 SenecaJS MicroServices Demo Project
 ==========
 
-Project I've decided to build for fun and as a way to learn about a few new technologies:
+Project I've decided to build for fun and as a way to learn about a new technology:
  - SenecaJS ([http://senecajs.org/](http://senecajs.org/))
- - AngularJS 2 ([https://angular.io](https://angular.io))
 
 The project functionality in itself is pretty basic - it's a "Running Log" application, which means 
 that when a user goes for a run he can log the distance for that day. However, to keep things interesting, 
@@ -11,10 +10,6 @@ there's also user management and different user roles and permissions supported.
 
 
 The current state of the project has a Microservices architecture implemented using senecaJS and Express - which I will detail below.
-
-**NOTE:** The current frontend is AngularJS 1.5 - re-used the skeleton from one of my previous projects - but I'll
-go down the road of migrating to AngularJS 2 in the next days / weeks
-
 
 ## Backend Architecture
 
@@ -25,7 +20,8 @@ I would recommend having them as separate repos:
 - RUNS
 
 The API service is the single point of contact with the frontend world. I'm using seneca-web and the nodeJS express framework
-to make a few REST endpoints available. To keep things simple, the API service is also serving the SPA frontend.
+to make a few REST endpoints available. To keep things simple, the API service is also serving the SPA frontend. 
+Also, due to lazyness in setting up HTTPS in Express / nodeJS, I'm using HTTP...don't do this in production!
 
 Both the USERS and RUNS services are clients to a AMQP RabbitMQ "internal" queue, configured to listen to messages with specific patterns.
 They each have their own database and I've tried to keep them short and simple.
