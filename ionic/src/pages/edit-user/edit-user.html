@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons left>
+      <button ion-button icon-only clear (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Edit User</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label floating>Email</ion-label>
+      <ion-input type="text" [(ngModel)]="email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Name</ion-label>
+      <ion-input type="text" [(ngModel)]="name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Role</ion-label>
+      <ion-select [(ngModel)]="role">
+        <ion-option value="admin">Administrator</ion-option>
+        <ion-option value="manager">Manager</ion-option>
+        <ion-option value="user">User</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <ion-buttons right>
+    <button ion-button color="danger" (click)="delete()">DELETE</button>
+    <button ion-button color="light" (click)="dismiss()">CANCEL</button>
+    <button ion-button color="default" (click)="save()">SAVE</button>
+  </ion-buttons>
+</ion-content>

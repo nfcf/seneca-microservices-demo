@@ -1,15 +1,20 @@
 SenecaJS MicroServices Demo Project
 ==========
 
-Project I've decided to build for fun and as a way to learn about a new technology:
+Project I've decided to build for fun and as a way to learn about new technologies:
  - SenecaJS ([http://senecajs.org/](http://senecajs.org/))
+ - Ionic2 ([https://ionicframework.com/](https://ionicframework.com/))
+ - Angular2 ([https://angular.io/](https://angular.io/))
 
 The project functionality in itself is pretty basic - it's a "Running Log" application, which means 
 that when a user goes for a run he can log the distance for that day. However, to keep things interesting, 
 there's also user management and different user roles and permissions supported.
 
 
-The current state of the project has a Microservices architecture implemented using senecaJS and Express - which I will detail below.
+## Current State of the project
+The backend has a Microservices architecture implemented using senecaJS and Express - which I will detail below.
+There is one main web frontend (built using angularJS 1.5)
+There is a ionic/angular2/cordova frontend that is only half baked but was enough for me to learn the basis of these technologies
 
 ## Backend Architecture
 
@@ -52,6 +57,15 @@ cp runs/options.example.js runs/options.app.js # and modify as needed.
 cd web
 npm install # installs the requirements for the frontend.
 gulp
+```
+
+## Setup the Ionic project
+
+```bash
+cd ionic
+npm install # installs the requirements for the ionic project.
+ionic serve --lab # Builds and serves the application in the browser (port 8100). 
+                  # The --lab flag is used to display the app as it will look like in iOS, Android & Windows Phone
 ```
 
 ## Install and run a RabbitMQ server (default configuration)

@@ -142,6 +142,14 @@ module.exports = function (options) {
     var seneca = this;
     var filter;
 
+    if (!args.user.admin && !args.user.manager) {
+      return done(null, {
+        http$: { status: 401 },
+        ok: false,
+        why: 'Not Authorized.'
+      });
+    }
+
     if (args.query.filter) {
       // TODO: Unfortunately seneca-memstore / query doesn't support regex.
       // Therefore, I'm not filtering here and am only filtering after the

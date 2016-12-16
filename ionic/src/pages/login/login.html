@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="segment">
+      <ion-segment-button value="signIn">
+        Sign In
+      </ion-segment-button>
+      <ion-segment-button value="signUp">
+        Sign Up
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="bgAuth">
+  <section *ngIf="segment == 'signIn'">
+    <ion-list>
+      <ion-item>
+        <ion-label floating>Email</ion-label>
+        <ion-input [(ngModel)]="email" type="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Password</ion-label>
+        <ion-input [(ngModel)]="password" type="password"></ion-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button full round color="danger" class="tangoAnimate quick tangoCentre" [disabled]="isInvalid()" (click)="login(segment)"
+      [ngClass]="setClass()">
+              <span *ngIf="!showSpinner" >Sign In</span>
+              <ion-spinner [color]="spinnerColor" *ngIf="showSpinner"></ion-spinner>
+    </button>
+  </section>
+  <section *ngIf="segment == 'signUp'">
+    <ion-list>
+      <ion-item>
+        <ion-label floating>Email</ion-label>
+        <ion-input [(ngModel)]="email" type="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Password</ion-label>
+        <ion-input [(ngModel)]="password" type="password"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Confirm Password</ion-label>
+        <ion-input [(ngModel)]="repeatPassword" type="password"></ion-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button full round color="danger" class="tangoAnimate quick tangoCentre" [disabled]="isInvalid()" (click)="register(segment)"
+      [ngClass]="setClass()">
+              <span *ngIf="!showSpinner" >Sign Up</span>
+              <ion-spinner [color]="spinnerColor" *ngIf="showSpinner"></ion-spinner>
+    </button>
+  </section>
+</ion-content>

@@ -133,6 +133,16 @@ seneca.ready(function (err) {
   app.use(require('cookie-parser')());
   app.use(require('body-parser').json());
 
+  // CORS middleware
+  var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+    next();
+  }
+  app.use(allowCrossDomain);
+
   // Log requests to console
   app.use(function (req, res, next) {
     console.log('EXPRESS', new Date().toISOString(), req.method, req.url);
@@ -188,7 +198,9 @@ seneca.ready(function (err) {
 
     // default route for when the URL isn't known...
     app.get('*', function (req, res) {
-      res.redirect('/');
+      if (req.url !== '/') {
+        res.redirect('/');
+      }
     });
     // start listening for HTTP requests
     server.listen(options.main.port);
